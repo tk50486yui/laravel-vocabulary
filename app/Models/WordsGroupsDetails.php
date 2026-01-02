@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,9 +7,9 @@ class WordsGroupsDetails extends Model
 {
     protected $table = 'words_groups_details';
 
-    protected $fillable = 
-    [
-      'ws_id', 'wg_id'
+    protected $fillable = [
+        'ws_id',
+        'wg_id',
     ];
 
     public function words()

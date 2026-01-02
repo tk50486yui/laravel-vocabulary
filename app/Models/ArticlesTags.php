@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,9 +7,9 @@ class ArticlesTags extends Model
 {
     protected $table = 'articles_tags';
 
-    protected $fillable = 
-    [
-      'arti_id', 'ts_id'
+    protected $fillable = [
+        'arti_id',
+        'ts_id',
     ];
 
     public function articles()

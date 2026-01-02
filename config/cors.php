@@ -15,20 +15,20 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths'                    => ['api/*'],
 
-    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    'allowed_methods'          => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 
-    'allowed_origins' => [env('CORS_ALLOWED_ORIGINS'), 'http://localhost', 'http://localhost:8080', env('CORS_ALLOWED_ORIGINS_G'), env('CORS_ALLOWED_ORIGINS_D'), env('CORS_ALLOWED_ORIGINS_V')],
+    'allowed_origins'          => ['*'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers'          => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers'          => [],
 
-    'max_age' => 0,
+    'max_age'                  => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials'     => false,
 
 ];

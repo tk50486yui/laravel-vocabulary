@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\Categories;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,10 +23,10 @@ class CategoriesRequest extends FormRequest
     public function rules()
     {
         return [
-            'cate_name' => 'required',
+            'cate_name'      => 'required',
             'cate_parent_id' => 'sometimes|nullable|integer|min:1', // 外鍵
-            'cate_level' => 'sometimes|nullable|integer|min:1',
-            'cate_order' => 'sometimes|nullable|integer|min:0'
+            'cate_level'     => 'sometimes|nullable|integer|min:1',
+            'cate_order'     => 'sometimes|nullable|integer|min:0',
         ];
     }
 }

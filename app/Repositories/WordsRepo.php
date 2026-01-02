@@ -1,57 +1,56 @@
 <?php
-
 namespace App\Repositories;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\Words;
+use Illuminate\Support\Facades\DB;
 
 class WordsRepo
 {
     public function find($id)
     {
-        $query = "SELECT 
+        $query = "SELECT
                     ws.*, cate.cate_name as cate_name
-                FROM 
+                FROM
                     words ws
-                LEFT JOIN 
+                LEFT JOIN
                     categories cate ON ws.cate_id =  cate.id
-                WHERE 
+                WHERE
                     ws.id = ?";
 
-        return DB::selectOne($query, array($id));
+        return DB::selectOne($query, [$id]);
     }
 
     public function findAll()
-    {     
-        $query = "SELECT 
+    {
+        $query = "SELECT
                     ws.*, cate.cate_name as cate_name,
                     json_build_object('values',
                         (
-                            SELECT 
+                            SELECT
                                 json_agg(json_build_object(
                                             'ts_id', ts.id,
                                             'ts_name', ts.ts_name,
-                                            'tc_color', COALESCE(tc.tc_color, '#fff'), 
-                                            'tc_background', COALESCE(tc.tc_background, '#000'), 
+                                            'tc_color', COALESCE(tc.tc_color, '#fff'),
+                                            'tc_background', COALESCE(tc.tc_background, '#000'),
                                             'tc_border', COALESCE(tc.tc_border, 'rgb(244, 202, 202)')
                                         )
                                     ORDER BY ts.ts_order ASC
                                 )
-                            FROM 
+                            FROM
                                 words_tags wt
-                            LEFT JOIN 
+                            LEFT JOIN
                                 tags ts ON wt.ts_id = ts.id
-                            LEFT JOIN 
+                            LEFT JOIN
                                 tags_color tc ON ts.tc_id = tc.id
-                            WHERE 
+                            WHERE
                                 wt.ws_id = ws.id
                         )
                     ) AS words_tags
-                FROM 
+                FROM
                     words ws
-                LEFT JOIN 
+                LEFT JOIN
                     categories cate ON ws.cate_id =  cate.id
-                ORDER BY 
+                ORDER BY
                     ws.id DESC";
 
         return DB::select($query);
@@ -60,21 +59,21 @@ class WordsRepo
     public function findByName($ws_name)
     {
         return Words::where('ws_name', $ws_name)->first();
-    }    
+    }
 
     public function store($data)
     {
         $new = Words::create([
-            'ws_name' => $data['ws_name'],
-            'ws_definition' => $data['ws_definition'],
+            'ws_name'          => $data['ws_name'],
+            'ws_definition'    => $data['ws_definition'],
             'ws_pronunciation' => $data['ws_pronunciation'],
-            'ws_slogan' => $data['ws_slogan'],
-            'ws_description' => $data['ws_description'],
-            'ws_forget_count' => $data['ws_forget_count'],
-            'ws_order' => $data['ws_order'],
-            'cate_id' => $data['cate_id']
+            'ws_slogan'        => $data['ws_slogan'],
+            'ws_description'   => $data['ws_description'],
+            'ws_forget_count'  => $data['ws_forget_count'],
+            'ws_order'         => $data['ws_order'],
+            'cate_id'          => $data['cate_id'],
         ]);
-        
+
         return $new->id;
     }
 
@@ -82,14 +81,14 @@ class WordsRepo
     {
         $word = Words::find($id);
         $word->update([
-            'ws_name' => $data['ws_name'],
-            'ws_definition' => $data['ws_definition'],
+            'ws_name'          => $data['ws_name'],
+            'ws_definition'    => $data['ws_definition'],
             'ws_pronunciation' => $data['ws_pronunciation'],
-            'ws_slogan' => $data['ws_slogan'],
-            'ws_description' => $data['ws_description'],
-            'ws_forget_count' => $data['ws_forget_count'],
-            'ws_order' => $data['ws_order'],
-            'cate_id' => $data['cate_id']
+            'ws_slogan'        => $data['ws_slogan'],
+            'ws_description'   => $data['ws_description'],
+            'ws_forget_count'  => $data['ws_forget_count'],
+            'ws_order'         => $data['ws_order'],
+            'cate_id'          => $data['cate_id'],
         ]);
     }
 
@@ -97,7 +96,7 @@ class WordsRepo
     {
         $word = Words::find($id);
         $word->update([
-            'ws_is_common' => $data['ws_is_common']
+            'ws_is_common' => $data['ws_is_common'],
         ]);
     }
 
@@ -105,7 +104,7 @@ class WordsRepo
     {
         $word = Words::find($id);
         $word->update([
-            'ws_is_important' => $data['ws_is_important']
+            'ws_is_important' => $data['ws_is_important'],
         ]);
     }
 

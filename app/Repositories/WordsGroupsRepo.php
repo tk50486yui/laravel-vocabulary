@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repositories;
 
 use App\Models\WordsGroups;
@@ -7,7 +6,7 @@ use App\Models\WordsGroups;
 class WordsGroupsRepo
 {
     public function find($id)
-    {     
+    {
         return WordsGroups::where('id', $id)->first();
     }
 
@@ -26,7 +25,7 @@ class WordsGroupsRepo
         $new = WordsGroups::create([
             'wg_name' => $data['wg_name'],
         ]);
-        
+
         return $new->id;
     }
 

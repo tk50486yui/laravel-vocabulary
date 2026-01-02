@@ -1,24 +1,18 @@
 # laravel-vocabulary
 
-使用 PHP Laravel 來建立後端 API，並搭配 Redis 緩存資料。
+使用 PHP Laravel 來建立後端 API。
 
-搭配 Vue 3 前端：[vue-vocabulary](https://github.com/tk50486yui/vue-vocabulary.git)
-
-後端 Slim 版本（舊）：[slim-vocabulary](https://github.com/tk50486yui/slim-vocabulary.git)
+單字彈性備忘錄後端 API，搭配 Vue 3 前端：[vue-vocabulary](https://github.com/tk50486yui/vue-vocabulary.git)
 
 ---
-### 系統簡介
+### 開發目的
 
-為 [vue-vocabulary](https://github.com/tk50486yui/vue-vocabulary.git) 提供 API 資料存取接口。
-
-[簡易 Demo](https://vue.yuex.site/vue-vocabulary/)
-
-[單字 Words API Demo](https://api.yuex.site/public/api/words)
+練習 Laravel、PostgreSQL、Redis 及 Docker。
 
 ---
 ### 開發環境
 
-PHP 7.2.12
+PHP 7.4.33
 
 Laravel 7.30.6
 
@@ -33,26 +27,13 @@ Redis - [win-3.0.504](https://github.com/microsoftarchive/redis/releases/tag/win
 
 ``` bash
 docker-compose up -d
-``` 
-進入 Docker Container 終端
 
-```bash
 docker-compose exec laravel-web sh
-``` 
 
-```bash
 npm install
-``` 
 
-```bash
 composer install
 ``` 
-離開
-
-```bash
-exit
-``` 
-
 ---
 ### 目錄架構
 ```    

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\Words;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,19 +24,19 @@ class WordsRequest extends FormRequest
     public function rules()
     {
         $rule = [
-            'ws_name' => 'required',
-            'ws_definition' => 'sometimes',
+            'ws_name'          => 'required',
+            'ws_definition'    => 'sometimes',
             'ws_pronunciation' => 'sometimes',
-            'ws_slogan' => 'sometimes',
-            'ws_description' => 'sometimes',           
-            'ws_forget_count' => 'sometimes|nullable|integer|min:0',
-            'ws_order' => 'sometimes|nullable|integer|min:0',
-            'cate_id' => 'sometimes|nullable|integer|min:1', // 外鍵
+            'ws_slogan'        => 'sometimes',
+            'ws_description'   => 'sometimes',
+            'ws_forget_count'  => 'sometimes|nullable|integer|min:0',
+            'ws_order'         => 'sometimes|nullable|integer|min:0',
+            'cate_id'          => 'sometimes|nullable|integer|min:1', // 外鍵
             /*
                 "words_tags":{ "array" : [], "values": [] }
                 欲新增的資料 (ts_id) 依序放進 "array" 就好
             */
-            'words_tags' => 'sometimes|nullable'
+            'words_tags'       => 'sometimes|nullable',
         ];
         switch (Route::current()->getActionMethod()) {
             case 'store':
@@ -46,14 +45,14 @@ class WordsRequest extends FormRequest
                 return $rule;
             case 'updateCommon':
                 return [
-                    'ws_is_common' => 'required|boolean'
+                    'ws_is_common' => 'required|boolean',
                 ];
             case 'updateImportant':
                 return [
-                    'ws_is_important' => 'required|boolean'
+                    'ws_is_important' => 'required|boolean',
                 ];
             default:
                 return $rule;
-        }       
+        }
     }
 }

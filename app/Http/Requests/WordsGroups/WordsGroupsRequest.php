@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\WordsGroups;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,12 +23,12 @@ class WordsGroupsRequest extends FormRequest
     public function rules()
     {
         return [
-            'wg_name' => 'required',
+            'wg_name'              => 'required',
             /*
                 "words_groups_details": []
                 欲新增的資料 (ws_id) 依序放進 words_groups_details 就好
             */
-            'words_groups_details' => 'sometimes|nullable|array'
+            'words_groups_details' => 'sometimes|nullable|array',
         ];
     }
 }

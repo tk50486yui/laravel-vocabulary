@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\Tags;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,13 +21,13 @@ class TagsOrderRequest extends FormRequest
      * @return array
      */
     public function rules()
-    { 
-        /** [{"id":1, "ts_order": 0}, {"id":2, "ts_order": 0}...] 
+    {
+        /** [{"id":1, "ts_order": 0}, {"id":2, "ts_order": 0}...]
          *  陣列物件格式
          * **/
         return [
-            '*.id' => 'required|integer|min:1',
+            '*.id'       => 'required|integer|min:1',
             '*.ts_order' => 'required|integer|min:0',
         ];
-    }     
+    }
 }

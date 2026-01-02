@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\Categories;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,13 +21,13 @@ class CategoriesOrderRequest extends FormRequest
      * @return array
      */
     public function rules()
-    { 
-        /** [{"id":1, "cate_order": 0}, {"id":2, "cate_order": 0}...] 
+    {
+        /** [{"id":1, "cate_order": 0}, {"id":2, "cate_order": 0}...]
          *  陣列物件格式
          * **/
         return [
-            '*.id' => 'required|integer|min:1',
+            '*.id'         => 'required|integer|min:1',
             '*.cate_order' => 'required|integer|min:0',
         ];
-    }     
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\TagsColor;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,9 +23,9 @@ class TagsColorRequest extends FormRequest
     public function rules()
     {
         return [
-            'tc_color' => 'required',
-            'tc_background'=> 'required',
-            'tc_border'=> 'required'
+            'tc_color'      => 'required',
+            'tc_background' => 'required',
+            'tc_border'     => 'required',
         ];
     }
 }

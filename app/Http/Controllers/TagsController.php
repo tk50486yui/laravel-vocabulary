@@ -1,97 +1,75 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\RedisService;
-use App\Services\TagsService;
-use App\Http\Requests\Tags\TagsRequest;
-use App\Http\Requests\Tags\TagsOrderRequest;
 use App\Exceptions\Custom\RecordNotFoundException;
 use App\Exceptions\Custom\Responses\Messages;
+use App\Http\Requests\Tags\TagsOrderRequest;
+use App\Http\Requests\Tags\TagsRequest;
+use App\Services\TagsService;
+use Illuminate\Http\Request;
 
 class TagsController extends Controller
 {
-    protected $redis;
-    protected $redisPrefix = 'Tags';
+    protected $tagsService;
 
-    public function __construct(RedisService $serv)
+    public function __construct()
     {
-        $this->redis = $serv;
+        $this->tagsService = new TagsService();
     }
 
     public function find(Request $request, $id)
     {
-        $TagsService = new TagsService();
-        $result = $TagsService->find($id);
-        if(!$result){
+        $result = $this->tagsService->find($id);
+        if (! $result) {
             throw new RecordNotFoundException();
         }
-       
+
         return response()->json($result);
     }
 
     public function findAll()
-    {       
-        return response()->json(
-            $this->redis->cache(
-                $this->redisPrefix, 
-                __FUNCTION__,
-                function () {
-                    $TagsService = new TagsService();
-                    return $TagsService->findAll();
-                }
-            )
-        );
+    {
+        $result = $this->tagsService->findAll();
+
+        return response()->json($result);
     }
 
     public function findRecent()
-    {     
-        return response()->json(
-            $this->redis->cache(
-                $this->redisPrefix, 
-                __FUNCTION__,
-                function () {
-                    $TagsService = new TagsService();
-                    return $TagsService->findRecent();
-                }
-            )
-        );
+    {
+        $result = $this->tagsService->findRecent();
+
+        return response()->json($result);
     }
 
     public function add(TagsRequest $request)
-    {        
-        $reqData = $request->validated();
-        $TagsService = new TagsService();
-        $TagsService->add($reqData);
-        $this->redis->update($this->redisPrefix, $TagsService);
+    {
+        $data = $request->validated();
+        $this->tagsService->add($data);
+
         return Messages::Success();
     }
 
     public function edit(TagsRequest $request, $id)
     {
-        $reqData = $request->validated();
-        $TagsService = new TagsService();
-        $TagsService->edit($reqData, $id);
-        $this->redis->update($this->redisPrefix, $TagsService);
+        $data = $request->validated();
+        $this->tagsService->edit($data, $id);
+
         return Messages::Success();
     }
 
     public function editOrder(TagsOrderRequest $request)
     {
-        $reqData = $request->validated();
-        $TagsService = new TagsService();
-        $TagsService->editOrder($reqData);
-        $this->redis->update($this->redisPrefix, $TagsService);
+        $data = $request->validated();
+        $this->tagsService->editOrder($data);
+
         return Messages::Success();
     }
 
     public function deleteByID(Request $request, $id)
     {
-        $TagsService = new TagsService();
-        $TagsService->deleteByID($id);
-        $this->redis->update($this->redisPrefix, $TagsService);
+        $this->tagsService->deleteByID($id);
+
         return Messages::Deletion();
     }
-    
+
 }

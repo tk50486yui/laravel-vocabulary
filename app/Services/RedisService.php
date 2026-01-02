@@ -1,18 +1,18 @@
 <?php
 namespace App\Services;
 
-use Illuminate\Support\Facades\Redis;
-use App\Services\WordsService;
 use App\Services\ArticlesService;
+use App\Services\WordsService;
+use Illuminate\Support\Facades\Redis;
 
 class RedisService
 {
     public function cache($prefix, $funName, $callback, $expiration = 600)
-    {   
+    {
         try {
             $response = Redis::ping();
-            if($response == 'PONG'){
-                $redisKey = $prefix . ':' . $funName;
+            if ($response == 'PONG') {
+                $redisKey    = $prefix . ':' . $funName;
                 $cacheResult = Redis::get($redisKey);
 
                 if ($cacheResult) {
@@ -25,9 +25,9 @@ class RedisService
 
                 return $result;
             }
-          
+
             return $callback();
-        }catch (\Predis\Connection\ConnectionException $e) { 
+        } catch (\Predis\Connection\ConnectionException $e) {
             return $callback();
         }
     }
@@ -36,34 +36,34 @@ class RedisService
     {
         try {
             $response = Redis::ping();
-            if($response == 'PONG'){
+            if ($response == 'PONG') {
                 $WordsService = new WordsService();
-                $result = $WordsService->findAll();
+                $result       = $WordsService->findAll();
                 Redis::setex("Words:findAll", $expiration, json_encode($result));
                 $ArticlesService = new ArticlesService();
-                $result = $ArticlesService->findAll();
+                $result          = $ArticlesService->findAll();
                 Redis::setex("Articles:findAll", $expiration, json_encode($result));
                 switch ($prefix) {
                     case 'TagsColor':
                     case 'WordsGroups';
-                        $result = $Service->findAll();
-                        $redisKey = $prefix. ':findAll';
+                        $result   = $Service->findAll();
+                        $redisKey = $prefix . ':findAll';
                         Redis::setex($redisKey, $expiration, json_encode($result));
                         break;
                     case 'Categories':
                     case 'Tags':
-                        $result = $Service->findAll();
-                        $redisKey = $prefix. ':findAll';
+                        $result   = $Service->findAll();
+                        $redisKey = $prefix . ':findAll';
                         Redis::setex($redisKey, $expiration, json_encode($result));
-                        $result = $Service->findRecent();
-                        $redisKey = $prefix. ':findRecent';
+                        $result   = $Service->findRecent();
+                        $redisKey = $prefix . ':findRecent';
                         Redis::setex($redisKey, $expiration, json_encode($result));
                         break;
                     default:
                         break;
                 }
             }
-        }catch (\Predis\Connection\ConnectionException $e) {
+        } catch (\Predis\Connection\ConnectionException $e) {
             return;
         }
     }

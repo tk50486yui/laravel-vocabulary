@@ -1,116 +1,101 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\Words;
-use App\Services\RedisService;
-use App\Services\WordsService;
+use App\Events\BroadcastUpdate;
 use App\Exceptions\Custom\RecordNotFoundException;
 use App\Exceptions\Custom\Responses\Messages;
+use App\Http\Requests\Words;
+use App\Services\WordsService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Events\BroadcastUpdate;
 
 class WordsController extends Controller
 {
-    protected $redis;
-    protected $redisPrefix = 'Words';
+    protected $wordsService;
 
-    public function __construct(RedisService $serv)
+    public function __construct()
     {
-        $this->redis = $serv;
+        $this->wordsService = new WordsService();
     }
 
     public function find(Request $request, $id)
     {
-        $WordsService = new WordsService();
-        $result = $WordsService->find($id);
-        if(!$result){
+        $result = $this->wordsService->find($id);
+        if (! $result) {
             throw new RecordNotFoundException();
         }
-       
+
         return response()->json($result);
-    }    
+    }
 
     public function findAll()
     {
-        return response()->json(
-            $this->redis->cache(
-                $this->redisPrefix, 
-                __FUNCTION__,
-                function () {
-                    $WordsService = new WordsService();
-                    return $WordsService->findAll();
-                }
-            )
-        );
+        $result = $this->wordsService->findAll();
+
+        return response()->json($result);
+
     }
 
     public function search(Request $request)
     {
         $ws_name = $request->query('ws_name');
-        $WordsService = new WordsService();
-        $result = $WordsService->findByName($ws_name);
-        if($result){
+        $result  = $this->wordsService->findByName($ws_name);
+        if ($result) {
             return Messages::Success();
-        }else{
+        } else {
             return Messages::RecordNotFound();
         }
     }
 
     public function store(Words\WordsRequest $request)
     {
-        $reqData = $request->validated();
-        $WordsService = new WordsService();
-        $WordsService->store($reqData);
-        $this->redis->update($this->redisPrefix, $WordsService);
+        $data = $request->validated();
+        $this->wordsService->store($data);
         event(new BroadcastUpdate(['message' => 'should be update']));
+
         return Messages::Success();
     }
 
     public function update(Words\WordsRequest $request, $id)
     {
-        $reqData = $request->validated();
-        $WordsService = new WordsService();
-        $WordsService->update($reqData, $id);
-        $this->redis->update($this->redisPrefix, $WordsService);
+        $data = $request->validated();
+        $this->wordsService->update($data, $id);
+
         return Messages::Success();
     }
 
     public function updateCommon(Words\WordsRequest $request, $id)
-    { 
-        $reqData = $request->validated();
-        $WordsService = new WordsService();
-        $WordsService->updateCommon($reqData, $id);
-        $this->redis->update($this->redisPrefix, $WordsService);
+    {
+        $data = $request->validated();
+        $this->wordsService->updateCommon($data, $id);
+
         return Messages::Success();
     }
 
     public function updateImportant(Words\WordsRequest $request, $id)
     {
-        $reqData = $request->validated();
-        $WordsService = new WordsService();
-        $WordsService->updateImportant($reqData, $id);
-        $this->redis->update($this->redisPrefix, $WordsService);
+        $data = $request->validated();
+        $this->wordsService->updateImportant($data, $id);
+
         return Messages::Success();
     }
 
     public function deleteByID(Request $request, $id)
     {
-        $WordsService = new WordsService();
-        $WordsService->deleteByID($id);
-        $this->redis->update($this->redisPrefix, $WordsService);
+        $this->wordsService->deleteByID($id);
+
         return Messages::Deletion();
     }
 
     /** 以下測試用，功能尚未完成 */
     public function upload(Request $request)
-    {  
+    {
         try {
             $uploadedFile = $request->file('ws_file');
-            $fileName = uniqid() . '_' . $uploadedFile->getClientOriginalName();
+            $fileName     = uniqid() . '_' . $uploadedFile->getClientOriginalName();
             $uploadedFile->storeAs('uploads', $fileName, 'public');
             return Messages::Success();
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             return Messages::ProcessingFailed();
         }
     }
@@ -120,9 +105,9 @@ class WordsController extends Controller
         try {
             $fileMeta = $request->file('file');
             $fileName = uniqid() . '_' . $fileMeta->getClientOriginalName();
-            $fileMeta->storeAs('uploads',  $fileName, 'public');
+            $fileMeta->storeAs('uploads', $fileName, 'public');
             return Messages::Success();
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             return Messages::ProcessingFailed();
         }
     }
@@ -133,11 +118,11 @@ class WordsController extends Controller
 
         $fileData = array_map(function ($file) {
             $fileName = pathinfo($file, PATHINFO_BASENAME);
-            $fileUrl = url(Storage::url($file));
-    
+            $fileUrl  = url(Storage::url($file));
+
             return [
                 'file_name' => $fileName,
-                'file_url' => $fileUrl,
+                'file_url'  => $fileUrl,
             ];
         }, $files);
 
@@ -158,5 +143,5 @@ class WordsController extends Controller
             return Messages::RecordNotFound();
         }
     }
-    
+
 }
