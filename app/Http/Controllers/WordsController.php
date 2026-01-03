@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Events\BroadcastUpdate;
 use App\Exceptions\Custom\RecordNotFoundException;
 use App\Exceptions\Custom\Responses\Messages;
 use App\Http\Requests\Words;
@@ -51,7 +50,7 @@ class WordsController extends Controller
     {
         $data = $request->validated();
         $this->wordsService->store($data);
-        event(new BroadcastUpdate(['message' => 'should be update']));
+        // event(new BroadcastUpdate(['message' => 'should be update']));
 
         return Messages::Success();
     }
