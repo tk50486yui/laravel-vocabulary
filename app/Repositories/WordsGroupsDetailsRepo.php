@@ -9,11 +9,11 @@ class WordsGroupsDetailsRepo
     public function findByWgID($wg_id)
     {
         $query = "SELECT
-                    ws.ws_name as ws_name, wgd.*
+                    ws.*, wgd.*
                 FROM
                     words_groups_details wgd
                 LEFT JOIN
-                    words ws ON wgd.ws_id =  ws.id
+                    words ws ON wgd.ws_id = ws.id
                 WHERE
                     wgd.wg_id = ?
                 ORDER BY
